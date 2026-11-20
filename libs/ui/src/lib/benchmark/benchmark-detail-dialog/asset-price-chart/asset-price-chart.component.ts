@@ -162,12 +162,8 @@ export class GfAssetPriceChartComponent implements OnChanges, OnDestroy {
     const muted = dark ? '#9aa4b0' : '#5a6573';
     const grid = dark ? 'rgba(232, 236, 241, 0.06)' : 'rgba(15, 23, 32, 0.06)';
     const purchase = this.purchase();
-    const levels = [
-      ...this.targetLines().map(({ value }) => {
-        return value;
-      }),
-      ...(purchase ? [purchase.price] : [])
-    ];
+    // seul le prix d'achat reste toujours visible ; les objectifs peuvent sortir du cadre (zoom sur la courbe)
+    const levels = purchase ? [purchase.price] : [];
 
     this.chart = createChart(container, {
       autoSize: true,
@@ -202,7 +198,6 @@ export class GfAssetPriceChartComponent implements OnChanges, OnDestroy {
     });
 
     this.series = this.chart.addAreaSeries({
-      // les objectifs et le prix d'achat restent toujours dans la fenêtre
       autoscaleInfoProvider: (original: () => any) => {
         const res = original();
 
@@ -239,8 +234,7 @@ export class GfAssetPriceChartComponent implements OnChanges, OnDestroy {
         color: line.color,
         lineStyle: LineStyle.Dashed,
         lineWidth: 1,
-        price: line.value,
-        title: line.label.split(' · ')[0]
+        price: line.value
       });
     }
 
