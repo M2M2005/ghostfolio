@@ -24,9 +24,21 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import { format } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { catchError, of } from 'rxjs';
 
-import { GfLineChartComponent } from '../../line-chart/line-chart.component';
-import { GfValueComponent } from '../../value/value.component';
+import { consensusName } from '../analyst-columns.helper';
+import {
+  GfAssetPriceChartComponent,
+  Purchase
+} from './asset-price-chart/asset-price-chart.component';
+import {
+  changeSince,
+  changeYtd,
+  gap,
+  PricePoint,
+  range52w
+} from './asset-stats.helper';
 import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
 import { TargetLine, targetLines } from './target-lines.helper';
 
@@ -36,9 +48,9 @@ import { TargetLine, targetLines } from './target-lines.helper';
   imports: [
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
-    GfLineChartComponent,
-    GfValueComponent,
-    MatDialogModule
+    GfAssetPriceChartComponent,
+    MatDialogModule,
+    NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-benchmark-detail-dialog',
@@ -50,6 +62,11 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
   public historicalDataItems: LineChartItem[];
   public isLoading = true;
   public precision = 2;
+  /** bourse-custom : cases de synthèse et achat */
+  public purchase?: Purchase;
+  public stats: { label: string; percent?: number; text?: string }[] = [];
+  public potentialMedian?: number;
+  public points: PricePoint[] = [];
   public targetLines: TargetLine[] = [];
   public value: number;
 
@@ -62,6 +79,31 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    this.dataService
+      .fetchHoldingDetail({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .pipe(
+        catchError(() => {
+          return of(undefined);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((holding) => {
+        if (
+          holding?.quantity &&
+          holding.averagePrice &&
+          holding.dateOfFirstActivity
+        ) {
+          this.purchase = {
+            date: format(holding.dateOfFirstActivity, DATE_FORMAT),
+            price: holding.averagePrice
+          };
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+
     this.dataService
       .fetchAsset({
         dataSource: this.data.dataSource,
@@ -91,6 +133,9 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
           this.precision = 0;
         }
 
+        this.points = this.historicalDataItems;
+        this.computeStats();
+
         this.targetLines = targetLines(
           this.data.analyst,
           assetProfile?.currency,
@@ -101,6 +146,51 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private computeStats() {
+    const analyst = this.data.analyst;
+    const high52 = range52w(this.points);
+    const money = (value?: number) => {
+      return value === undefined
+        ? '—'
+        : `${value.toLocaleString(this.data.locale, { maximumFractionDigits: 2 })}${this.assetProfile?.currency ? ` ${this.assetProfile.currency}` : ''}`;
+    };
+
+    this.potentialMedian = gap(this.value, analyst?.targetMedian);
+    this.stats = [
+      { label: '1 mois', percent: changeSince(this.points, 30) },
+      { label: '1 an', percent: changeSince(this.points, 365) },
+      { label: 'Depuis le 1er janv.', percent: changeYtd(this.points) },
+      { label: 'Plus haut 52 sem.', text: money(high52?.high) },
+      { label: 'Plus bas 52 sem.', text: money(high52?.low) },
+      ...(analyst?.numberOfAnalysts
+        ? [
+            {
+              label: 'Analystes',
+              text: `${analyst.numberOfAnalysts} · ${consensusName(analyst)}${
+                analyst.recommendationMean
+                  ? ` (${analyst.recommendationMean.toLocaleString(this.data.locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })})`
+                  : ''
+              }`
+            }
+          ]
+        : [])
+    ];
+  }
+
+  public formatPercent(value?: number) {
+    return value === undefined
+      ? '—'
+      : `${value >= 0 ? '+' : ''}${(value * 100).toLocaleString(this.data.locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })} %`;
+  }
+
+  public percentClass(value?: number) {
+    return value === undefined
+      ? ''
+      : value >= 0
+        ? 'text-success'
+        : 'text-danger';
   }
 
   public onClose() {

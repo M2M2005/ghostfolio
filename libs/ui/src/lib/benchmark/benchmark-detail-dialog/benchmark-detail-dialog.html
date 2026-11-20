@@ -7,32 +7,51 @@
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
-    <div class="row">
-      <div class="col-12 d-flex justify-content-center mb-3">
-        <gf-value
-          size="large"
-          [isLoading]="isLoading"
-          [locale]="data.locale"
-          [precision]="precision"
-          [unit]="assetProfile?.currency"
-          [value]="value"
-        />
+    @if (potentialMedian !== undefined) {
+      <!-- bourse-custom : critère d'achat mis en avant -->
+      <div class="d-flex justify-content-center mb-3">
+        <div class="potential" [class]="percentClass(potentialMedian)">
+          <span class="potential-label"
+            >Potentiel jusqu'à l'objectif médian</span
+          >
+          <span class="potential-value">{{
+            formatPercent(potentialMedian)
+          }}</span>
+        </div>
       </div>
-    </div>
+    }
 
-    <gf-line-chart
-      class="mb-4"
-      [colorScheme]="data.colorScheme"
-      [currency]="assetProfile?.currency"
-      [historicalDataItems]="historicalDataItems"
-      [isAnimated]="true"
-      [label]="data.symbol"
-      [locale]="data.locale"
-      [showGradient]="true"
-      [showXAxis]="true"
-      [showYAxis]="true"
-      [targetLines]="targetLines"
-    />
+    @if (isLoading) {
+      <ngx-skeleton-loader
+        animation="pulse"
+        [theme]="{ height: '360px', width: '100%' }"
+      />
+    } @else {
+      <gf-asset-price-chart
+        class="mb-3"
+        [colorScheme]="data.colorScheme"
+        [currency]="assetProfile?.currency"
+        [locale]="data.locale"
+        [points]="points"
+        [purchase]="purchase"
+        [targetLines]="targetLines"
+      />
+    }
+
+    <div class="stats mb-2">
+      @for (stat of stats; track stat.label) {
+        <div class="stat">
+          <div class="stat-label">{{ stat.label }}</div>
+          @if (stat.text !== undefined) {
+            <div class="stat-value">{{ stat.text }}</div>
+          } @else {
+            <div class="stat-value" [class]="percentClass(stat.percent)">
+              {{ formatPercent(stat.percent) }}
+            </div>
+          }
+        </div>
+      }
+    </div>
   </div>
 </div>
 

@@ -1,0 +1,143 @@
+// Style de bourse.cyprienbons.com (bourse-custom)
+:host {
+  display: block;
+
+  .chart-container {
+    height: 360px;
+    position: relative;
+
+    ngx-skeleton-loader {
+      height: 100%;
+    }
+
+    .chart {
+      height: 100%;
+    }
+  }
+
+  .legend-date {
+    color: rgba(var(--palette-foreground-base), 0.45);
+    font-size: 12px;
+  }
+
+  .ranges {
+    background: rgba(var(--palette-foreground-base), 0.03);
+    border: 1px solid rgba(var(--palette-foreground-base), 0.1);
+    border-radius: 8px;
+    display: inline-flex;
+    padding: 2px;
+
+    button {
+      background: none;
+      border: 0;
+      border-radius: 6px;
+      color: rgba(var(--palette-foreground-base), 0.6);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+
+      &[aria-pressed='true'] {
+        background: rgba(var(--palette-background-card), 1);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+        color: rgba(var(--palette-foreground-base), 1);
+      }
+    }
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+  }
+
+  .legend-item {
+    align-items: center;
+    background: none;
+    border: 0;
+    border-radius: 4px;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    gap: 7px;
+    padding: 3px 2px;
+
+    &.hidden-series {
+      opacity: 0.4;
+    }
+
+    b {
+      font-variant-numeric: tabular-nums;
+      min-width: 58px;
+    }
+  }
+
+  button:focus-visible {
+    outline: 2px solid rgba(var(--palette-primary-500), 1);
+    outline-offset: 1px;
+  }
+
+  .swatch {
+    border-radius: 2px;
+    display: inline-block;
+    height: 3px;
+    width: 14px;
+
+    &.portfolio {
+      height: 4px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .chart-container {
+      height: 280px;
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  .legend-date {
+    color: rgba(var(--palette-foreground-base-dark), 0.45);
+  }
+
+  .ranges {
+    background: rgba(var(--palette-foreground-base-dark), 0.03);
+    border-color: rgba(var(--palette-foreground-base-dark), 0.12);
+
+    button {
+      color: rgba(var(--palette-foreground-base-dark), 0.6);
+
+      &[aria-pressed='true'] {
+        background: rgba(var(--palette-background-card-dark), 1);
+        color: rgba(var(--palette-foreground-base-dark), 1);
+      }
+    }
+  }
+}
+
+// fiche d'un actif : cours en grand, écarts aux objectifs en ligne
+:host {
+  .legend-price {
+    font-family: var(--font-family-display);
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .legend {
+    font-size: 14px;
+    gap: 2px 14px;
+  }
+
+  .legend-item {
+    cursor: default;
+    gap: 5px;
+
+    b {
+      min-width: 0;
+    }
+  }
+}

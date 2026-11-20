@@ -1,0 +1,38 @@
+<div
+  class="align-items-start d-flex flex-wrap gap-2 justify-content-between mb-2"
+>
+  <div>
+    <div class="legend-date">{{ legendDate }}</div>
+    <div class="legend-price">{{ formatPrice(legendPrice) }}</div>
+    <div class="legend">
+      @for (item of legendGaps; track item.label) {
+        <span class="legend-item">
+          @if (item.color) {
+            <span class="swatch" [style.background]="item.color"></span>
+          }
+          <b [class]="gapClass(item.value)">{{ formatGap(item.value) }}</b>
+          <span class="text-body-secondary">{{ item.label }}</span>
+        </span>
+      }
+    </div>
+  </div>
+  <div aria-label="Période" class="ranges" role="group">
+    @for (r of ranges; track r.days) {
+      <button
+        type="button"
+        [attr.aria-pressed]="range === r.days"
+        (click)="onRange(r.days)"
+      >
+        {{ r.label }}
+      </button>
+    }
+  </div>
+</div>
+<div class="chart-container">
+  <div
+    #chartContainer
+    aria-label="Cours de l'actif avec les objectifs des analystes"
+    class="chart"
+    role="img"
+  ></div>
+</div>
