@@ -146,6 +146,19 @@
     </div>
   </div>
 
+  <!-- bourse-custom : performance de chaque position depuis son achat -->
+  <div class="mb-5 row">
+    <div class="col-lg">
+      <gf-holdings-performance-chart
+        [colorScheme]="user?.settings?.colorScheme"
+        [holdings]="holdingsPerformance"
+        [isLoading]="isLoadingHoldingsPerformance || isLoadingInvestmentChart"
+        [locale]="user?.settings?.locale"
+        [portfolioDataItems]="performanceDataItemsInPercentage"
+      />
+    </div>
+  </div>
+
   <div class="mb-5 row">
     <div class="col">
       <mat-card appearance="outlined">

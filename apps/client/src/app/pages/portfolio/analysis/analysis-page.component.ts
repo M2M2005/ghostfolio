@@ -1,4 +1,9 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
+import { holdingPerformance } from '@ghostfolio/client/components/holdings-performance-chart/holding-performance.helper';
+import {
+  GfHoldingsPerformanceChartComponent,
+  HoldingSeries
+} from '@ghostfolio/client/components/holdings-performance-chart/holdings-performance-chart.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
@@ -62,6 +67,7 @@ import { forkJoin } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComparatorComponent,
+    GfHoldingsPerformanceChartComponent,
     GfInvestmentChartComponent,
     GfPremiumIndicatorComponent,
     GfToggleComponent,
@@ -83,6 +89,8 @@ export class GfAnalysisPageComponent implements OnInit {
   protected benchmarkDataItems: LineChartItem[] = [];
   protected readonly benchmarks: Partial<SymbolProfile>[];
   protected bottom3: PortfolioPosition[];
+  protected holdingsPerformance: HoldingSeries[] = []; // bourse-custom
+  protected isLoadingHoldingsPerformance = true; // bourse-custom
   protected dividendsByGroup: InvestmentItem[];
   protected readonly dividendTimelineDataLabel = $localize`Dividend`;
   protected hasPermissionToReadAiPrompt: boolean;
@@ -347,6 +355,38 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
+  /** Courbe « % depuis l'achat » de chaque position détenue (bourse-custom) */
+  private updateHoldingsPerformance(holdings: PortfolioPosition[]) {
+    if (holdings.length === 0) {
+      this.holdingsPerformance = [];
+      this.isLoadingHoldingsPerformance = false;
+      this.changeDetectorRef.markForCheck();
+
+      return;
+    }
+
+    this.isLoadingHoldingsPerformance = true;
+
+    forkJoin(
+      holdings.map(({ assetProfile: { dataSource, symbol } }) => {
+        return this.dataService.fetchHoldingDetail({ dataSource, symbol });
+      })
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((details) => {
+        this.holdingsPerformance = details.map(({ historicalData }, i) => {
+          return {
+            dataItems: holdingPerformance(historicalData ?? []),
+            name:
+              holdings[i].assetProfile.name ?? holdings[i].assetProfile.symbol
+          };
+        });
+        this.isLoadingHoldingsPerformance = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private update() {
     this.isLoadingInvestmentChart = true;
 
@@ -451,6 +491,8 @@ export class GfAnalysisPageComponent implements OnInit {
           .reverse();
 
         this.changeDetectorRef.markForCheck();
+
+        this.updateHoldingsPerformance(holdings.filter(canOpenHoldingDetail));
       });
 
     this.fetchDividendsAndInvestments();

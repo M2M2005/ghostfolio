@@ -1,0 +1,44 @@
+<div class="mb-2 row">
+  <div class="col d-flex">
+    <div class="align-items-center d-flex flex-grow-1 h5 mb-0 py-2">
+      <span>Performance depuis l'achat</span>
+    </div>
+  </div>
+</div>
+@if (legend.length > 0) {
+  <div class="legend mb-2">
+    @for (item of legend; track item.name; let i = $index) {
+      <button
+        class="legend-item"
+        type="button"
+        [attr.aria-pressed]="item.visible"
+        [class.hidden-series]="!item.visible"
+        (click)="onToggle(i)"
+      >
+        <span
+          class="swatch"
+          [class.portfolio]="item.isPortfolio"
+          [style.background]="item.color"
+        ></span>
+        <span class="text-body-secondary">{{ item.name }}</span>
+        <b [class]="valueClass(item.value)">{{ formatPercent(item.value) }}</b>
+      </button>
+    }
+  </div>
+}
+<div class="chart-container">
+  @if (isLoading()) {
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{ height: '100%', width: '100%' }"
+    />
+  } @else if (legend.length === 0) {
+    <p class="py-5 text-body-secondary text-center">
+      Aucune position détenue pour l'instant.
+    </p>
+  }
+  <canvas
+    #chartCanvas
+    [class.d-none]="isLoading() || legend.length === 0"
+  ></canvas>
+</div>

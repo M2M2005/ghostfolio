@@ -153,6 +153,146 @@
       </td>
     </ng-container>
 
+    <!-- Colonnes « analystes » de la liste de suivi (bourse-custom) -->
+    <ng-container matColumnDef="price">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>Cours</th>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
+        @if (isNumber(element?.marketPrice)) {
+          <gf-value
+            class="d-inline-block justify-content-end"
+            [locale]="locale()"
+            [unit]="element?.currency"
+            [value]="element?.marketPrice"
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="change1m">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>1 mois</th>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
+        @if (isNumber(change1m(element?.sparkline))) {
+          <gf-value
+            class="d-inline-block justify-content-end"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="locale()"
+            [value]="change1m(element?.sparkline)"
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="targetLow">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
+        Objectif bas
+      </th>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
+        @if (isNumber(element?.analyst?.targetLow)) {
+          <gf-value
+            class="d-inline-block justify-content-end"
+            [locale]="locale()"
+            [unit]="element?.currency"
+            [value]="element?.analyst?.targetLow"
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="potentialLow">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
+        Potentiel bas
+      </th>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
+        @if (
+          isNumber(potential(element?.marketPrice, element?.analyst?.targetLow))
+        ) {
+          <gf-value
+            class="d-inline-block fw-bold justify-content-end"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="locale()"
+            [precision]="0"
+            [value]="
+              potential(element?.marketPrice, element?.analyst?.targetLow)
+            "
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="targetMedian">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
+        Objectif médian
+      </th>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
+        @if (isNumber(element?.analyst?.targetMedian)) {
+          <gf-value
+            class="d-inline-block justify-content-end"
+            [locale]="locale()"
+            [unit]="element?.currency"
+            [value]="element?.analyst?.targetMedian"
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="potentialMedian">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
+        Potentiel médian
+      </th>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
+        @if (
+          isNumber(
+            potential(element?.marketPrice, element?.analyst?.targetMedian)
+          )
+        ) {
+          <gf-value
+            class="d-inline-block fw-bold justify-content-end"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="locale()"
+            [precision]="0"
+            [value]="
+              potential(element?.marketPrice, element?.analyst?.targetMedian)
+            "
+          />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="consensus">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>Consensus</th>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+        <small>{{ consensusLabel(element?.analyst, locale()) }}</small>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sparkline">
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>3 mois</th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        @if (sparkPoints(element?.sparkline, 84, 26)) {
+          <svg
+            aria-hidden="true"
+            class="d-block ms-auto"
+            height="26"
+            viewBox="0 0 84 26"
+            width="84"
+            [class]="trendClass(element?.sparkline)"
+          >
+            <polyline
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              [attr.points]="sparkPoints(element?.sparkline, 84, 26)"
+            />
+          </svg>
+        }
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="marketCondition">
       <th *matHeaderCellDef mat-header-cell></th>
       <td *matCellDef="let element" class="px-0" mat-cell>

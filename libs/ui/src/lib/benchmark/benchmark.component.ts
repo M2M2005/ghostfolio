@@ -41,6 +41,13 @@ import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { translate } from '../i18n';
 import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.component';
 import { GfValueComponent } from '../value/value.component';
+import {
+  change1m,
+  consensusLabel,
+  potential,
+  sparkPoints,
+  trendClass
+} from './analyst-columns.helper';
 import { GfBenchmarkDetailDialogComponent } from './benchmark-detail-dialog/benchmark-detail-dialog.component';
 import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interfaces/interfaces';
 
@@ -69,6 +76,7 @@ export class GfBenchmarkComponent implements OnInit {
   public readonly hasPermissionToDeleteItem = input<boolean>();
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly locale = input(getLocale());
+  public readonly showAnalystColumns = input(false); // bourse-custom : liste de suivi
   public readonly showIcon = input(false);
   public readonly showSymbol = input(true);
   public readonly user = input<User>();
@@ -80,6 +88,24 @@ export class GfBenchmarkComponent implements OnInit {
   protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
 
   protected readonly displayedColumns = computed(() => {
+    if (this.showAnalystColumns()) {
+      return [
+        ...(this.showIcon() ? ['icon'] : []),
+        'name',
+        'price',
+        'change1m',
+        'targetLow',
+        'potentialLow',
+        'targetMedian',
+        'potentialMedian',
+        'consensus',
+        'sparkline',
+        'change',
+        'marketCondition',
+        'actions'
+      ];
+    }
+
     return [
       ...(this.showIcon() ? ['icon'] : []),
       'name',
@@ -97,7 +123,12 @@ export class GfBenchmarkComponent implements OnInit {
     return !this.benchmarks();
   });
 
+  protected readonly change1m = change1m;
+  protected readonly consensusLabel = consensusLabel;
   protected readonly isNumber = isNumber;
+  protected readonly potential = potential;
+  protected readonly sparkPoints = sparkPoints;
+  protected readonly trendClass = trendClass;
   protected readonly resolveMarketCondition = resolveMarketCondition;
   protected readonly round = round;
   protected readonly translate = translate;
