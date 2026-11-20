@@ -7,20 +7,6 @@
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
-    @if (potentialMedian !== undefined) {
-      <!-- bourse-custom : critère d'achat mis en avant -->
-      <div class="d-flex justify-content-center mb-3">
-        <div class="potential" [class]="percentClass(potentialMedian)">
-          <span class="potential-label"
-            >Potentiel jusqu'à l'objectif médian</span
-          >
-          <span class="potential-value">{{
-            formatPercent(potentialMedian)
-          }}</span>
-        </div>
-      </div>
-    }
-
     @if (isLoading) {
       <ngx-skeleton-loader
         animation="pulse"

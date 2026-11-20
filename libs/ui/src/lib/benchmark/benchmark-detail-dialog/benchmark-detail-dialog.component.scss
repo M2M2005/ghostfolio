@@ -5,36 +5,7 @@
     max-height: unset;
   }
 
-  // bourse-custom : potentiel en avant + cases de synthèse
-  .potential {
-    align-items: baseline;
-    border: 1px solid rgba(var(--palette-foreground-base), 0.1);
-    border-radius: 12px;
-    display: inline-flex;
-    gap: 10px;
-    padding: 8px 16px;
-
-    .potential-label {
-      color: rgba(var(--palette-foreground-base), 0.6);
-      font-size: 13px;
-    }
-
-    @media (max-width: 575.98px) {
-      align-items: center;
-      flex-direction: column;
-      gap: 0;
-      text-align: center;
-    }
-
-    .potential-value {
-      white-space: nowrap;
-      font-family: var(--font-family-display);
-      font-size: 1.5rem;
-      font-variant-numeric: tabular-nums;
-      font-weight: 700;
-    }
-  }
-
+  // bourse-custom : cases de synthèse
   .stats {
     display: grid;
     gap: 8px;
@@ -64,12 +35,10 @@
 }
 
 :host-context(.theme-dark) {
-  .potential,
   .stat {
     border-color: rgba(var(--palette-foreground-base-dark), 0.12);
   }
 
-  .potential .potential-label,
   .stat .stat-label {
     color: rgba(var(--palette-foreground-base-dark), 0.6);
   }

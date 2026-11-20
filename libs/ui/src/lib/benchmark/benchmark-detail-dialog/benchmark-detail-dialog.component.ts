@@ -35,7 +35,6 @@ import {
 import {
   changeSince,
   changeYtd,
-  gap,
   PricePoint,
   range52w
 } from './asset-stats.helper';
@@ -65,7 +64,6 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
   /** bourse-custom : cases de synthèse et achat */
   public purchase?: Purchase;
   public stats: { label: string; percent?: number; text?: string }[] = [];
-  public potentialMedian?: number;
   public points: PricePoint[] = [];
   public targetLines: TargetLine[] = [];
   public value: number;
@@ -157,7 +155,6 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
         : `${value.toLocaleString(this.data.locale, { maximumFractionDigits: 2 })}${this.assetProfile?.currency ? ` ${this.assetProfile.currency}` : ''}`;
     };
 
-    this.potentialMedian = gap(this.value, analyst?.targetMedian);
     this.stats = [
       { label: '1 mois', percent: changeSince(this.points, 30) },
       { label: '1 an', percent: changeSince(this.points, 365) },
