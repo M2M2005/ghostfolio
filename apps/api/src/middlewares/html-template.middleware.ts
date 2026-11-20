@@ -208,7 +208,10 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
       !(SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode) ||
       !this.indexHtmlMap[languageCode]
     ) {
-      languageCode = DEFAULT_LANGUAGE_CODE;
+      // bourse-custom : seul le français est compilé
+      languageCode = this.indexHtmlMap[DEFAULT_LANGUAGE_CODE]
+        ? DEFAULT_LANGUAGE_CODE
+        : 'fr';
     }
 
     const currentDate = format(new Date(), DATE_FORMAT);

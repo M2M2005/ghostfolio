@@ -88,71 +88,8 @@
                     onChangeUserSetting('language', $event.value)
                   "
                 >
-                  <mat-option [value]="null" />
-                  <mat-option value="de">Deutsch</mat-option>
-                  <mat-option value="en">English</mat-option>
-                  @if (user?.settings?.isExperimentalFeatures) {
-                    <mat-option value="ca"
-                      >Català (<ng-container i18n>Community</ng-container
-                      >)</mat-option
-                    >
-                  }
-                  <mat-option value="zh"
-                    >Chinese / 简体中文 (<ng-container i18n
-                      >Community</ng-container
-                    >)</mat-option
-                  >
-                  <mat-option value="es"
-                    >Español (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  <mat-option value="fr"
-                    >Français (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  <mat-option value="it"
-                    >Italiano (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  <!--
-                    @if (user?.settings?.isExperimentalFeatures) {
-                      <mat-option value="ja"
-                        >Japanese / 日本語 (<ng-container i18n
-                          >Community</ng-container
-                        >)</mat-option
-                      >
-                    }
-                  -->
-                  @if (user?.settings?.isExperimentalFeatures) {
-                    <mat-option value="ko"
-                      >Korean / 한국어 (<ng-container i18n
-                        >Community</ng-container
-                      >)</mat-option
-                    >
-                  }
-                  <mat-option value="nl"
-                    >Nederlands (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  <mat-option value="pl"
-                    >Polski (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  <mat-option value="pt"
-                    >Português (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  <mat-option value="tr"
-                    >Türkçe (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
-                  @if (user?.settings?.isExperimentalFeatures) {
-                    <mat-option value="uk"
-                      >Ukrainian / Українська (<ng-container i18n
-                        >Community</ng-container
-                      >)</mat-option
-                    >
-                  }
+                  <!-- bourse-custom : français uniquement (seule langue compilée) -->
+                  <mat-option value="fr">Français</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

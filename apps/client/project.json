@@ -174,7 +174,8 @@
           "namedChunks": false,
           "optimization": true,
           "outputHashing": "all",
-          "sourceMap": false
+          "sourceMap": false,
+          "localize": ["fr"]
         }
       },
       "outputs": ["{options.outputPath.base}"],
