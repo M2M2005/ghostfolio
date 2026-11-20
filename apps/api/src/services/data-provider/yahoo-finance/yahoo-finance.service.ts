@@ -12,6 +12,7 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  AnalystData,
   DataProviderHistoricalResponse,
   DataProviderInfo,
   DataProviderResponse,
@@ -38,6 +39,8 @@ import type {
 } from 'yahoo-finance2/modules/quoteSummary';
 import type { SearchQuoteNonYahoo } from 'yahoo-finance2/modules/search';
 
+import { parseAnalystData } from './analyst-data.helper';
+
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
   private static readonly DELISTED_ERROR_MESSAGE =
@@ -59,6 +62,23 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public canHandle() {
     return true;
+  }
+
+  /** Objectifs de cours et consensus des analystes (modification bourse-custom) */
+  public async getAnalystData(
+    symbol: string
+  ): Promise<AnalystData | undefined> {
+    try {
+      const summary = await this.yahooFinance.quoteSummary(symbol, {
+        modules: ['financialData', 'recommendationTrend']
+      });
+
+      return parseAnalystData(summary as any);
+    } catch (error) {
+      this.logger.warn(`Could not get analyst data for ${symbol}: ${error}`);
+
+      return undefined;
+    }
   }
 
   public async getAssetProfile({

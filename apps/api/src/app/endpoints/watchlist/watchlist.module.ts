@@ -6,6 +6,7 @@ import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impe
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
@@ -23,6 +24,7 @@ import { WatchlistService } from './watchlist.service';
     ImpersonationModule,
     MarketDataModule,
     PrismaModule,
+    RedisCacheModule,
     SymbolProfileModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule

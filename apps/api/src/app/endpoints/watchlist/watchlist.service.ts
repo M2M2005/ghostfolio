@@ -1,18 +1,26 @@
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
+  AnalystData,
   AssetProfileIdentifier,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { DataSource, Prisma } from '@prisma/client';
+import { subDays } from 'date-fns';
+
+// Modification bourse-custom : colonnes analystes et mini-courbe dans la liste de suivi
+const ANALYST_CACHE_TTL = 12 * 60 * 60 * 1000;
+const SPARKLINE_DAYS = 92;
 
 @Injectable()
 export class WatchlistService {
@@ -22,8 +30,33 @@ export class WatchlistService {
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly redisCacheService: RedisCacheService,
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly yahooFinanceService: YahooFinanceService
   ) {}
+
+  private async getAnalystData(
+    symbol: string
+  ): Promise<AnalystData | undefined> {
+    const key = `bourse-custom-analyst-${symbol}`;
+    const cached = await this.redisCacheService.get(key);
+
+    if (cached) {
+      return JSON.parse(cached) as AnalystData;
+    }
+
+    const data = await this.yahooFinanceService.getAnalystData(symbol);
+
+    if (data) {
+      await this.redisCacheService.set(
+        key,
+        JSON.stringify(data),
+        ANALYST_CACHE_TTL
+      );
+    }
+
+    return data;
+  }
 
   public async createWatchlistItem({
     dataSource,
@@ -117,13 +150,21 @@ export class WatchlistService {
           return profile.dataSource === dataSource && profile.symbol === symbol;
         });
 
-        const [allTimeHigh, trends] = await Promise.all([
+        const [allTimeHigh, trends, analyst, history] = await Promise.all([
           this.marketDataService.getMax({
             dataSource,
             symbol
           }),
-          this.benchmarkService.getBenchmarkTrends({ dataSource, symbol })
+          this.benchmarkService.getBenchmarkTrends({ dataSource, symbol }),
+          dataSource === DataSource.YAHOO
+            ? this.getAnalystData(symbol)
+            : Promise.resolve(undefined),
+          this.marketDataService.getRange({
+            assetProfileIdentifiers: [{ dataSource, symbol }],
+            dateQuery: { gte: subDays(new Date(), SPARKLINE_DAYS) }
+          })
         ]);
+        const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
 
         const performancePercent =
           this.benchmarkService.calculateChangeInPercentage(
@@ -135,6 +176,12 @@ export class WatchlistService {
         return {
           dataSource,
           symbol,
+          analyst,
+          currency: quote?.currency,
+          marketPrice: quote?.marketPrice,
+          sparkline: history.map(({ marketPrice }) => {
+            return marketPrice;
+          }),
           marketCondition:
             this.benchmarkService.getMarketCondition(performancePercent),
           name: assetProfile?.name,
