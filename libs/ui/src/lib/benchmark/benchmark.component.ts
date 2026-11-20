@@ -212,6 +212,11 @@ export class GfBenchmarkComponent implements OnInit {
       data: {
         dataSource,
         symbol,
+        analyst: this.benchmarks()?.find((benchmark) => {
+          return (
+            benchmark.dataSource === dataSource && benchmark.symbol === symbol
+          );
+        })?.analyst,
         colorScheme: this.user()?.settings?.colorScheme,
         deviceType: this.deviceType(),
         locale: this.locale()

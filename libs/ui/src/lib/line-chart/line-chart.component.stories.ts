@@ -234,3 +234,32 @@ export const Simple: Story = {
     unit: 'USD'
   }
 };
+
+// bourse-custom : fiche d'un actif de la liste de suivi, avec objectifs d'analystes
+export const AvecObjectifs: Story = {
+  args: {
+    currency: 'USD',
+    historicalDataItems: Array.from({ length: 250 }, (_, i) => {
+      const date = new Date(Date.UTC(2025, 10, 20) + i * 86400000);
+
+      return {
+        date: date.toISOString().slice(0, 10),
+        value: 520 + i * 0.25 + Math.sin(i / 9) * 22
+      };
+    }),
+    isAnimated: false,
+    label: 'MSCI',
+    locale: 'fr',
+    showGradient: true,
+    showXAxis: true,
+    showYAxis: true,
+    targetLines: [
+      { color: '#1baf7a', label: 'Objectif moyen · 690,4 USD', value: 690.4 },
+      { color: '#eda100', label: 'Objectif bas · 520 USD', value: 520 }
+    ]
+  },
+  render: (args) => ({
+    props: args,
+    template: `<div style="width: 736px; padding: 24px"><gf-line-chart [currency]="currency" [historicalDataItems]="historicalDataItems" [isAnimated]="isAnimated" [label]="label" [locale]="locale" [showGradient]="showGradient" [showXAxis]="showXAxis" [showYAxis]="showYAxis" [targetLines]="targetLines" /></div>`
+  })
+};

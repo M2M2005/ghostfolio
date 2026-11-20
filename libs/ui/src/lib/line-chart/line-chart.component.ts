@@ -38,6 +38,7 @@ import {
   type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import {
@@ -69,6 +70,8 @@ export class GfLineChartComponent
   @Input() showLoader = true;
   @Input() showXAxis = false;
   @Input() showYAxis = false;
+  /** bourse-custom : lignes horizontales étiquetées (objectifs d'analystes) */
+  @Input() targetLines: { color: string; label: string; value: number }[] = [];
   @Input() unit: string;
   @Input() yMax: number;
   @Input() yMaxLabel: string;
@@ -203,6 +206,10 @@ export class GfLineChartComponent
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+        this.chart.options.plugins.annotation = {
+          annotations: this.getTargetAnnotations()
+        };
+        Object.assign(this.chart.options.scales!['y']!, this.getTargetRange());
         this.chart.options.animations = this.isAnimated
           ? animations
           : undefined;
@@ -227,6 +234,7 @@ export class GfLineChartComponent
                 display: this.showLegend,
                 position: 'bottom'
               },
+              annotation: { annotations: this.getTargetAnnotations() },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
                 color: getChartBorderColor(this.colorScheme)
@@ -271,6 +279,7 @@ export class GfLineChartComponent
                 }),
                 max: this.yMax,
                 min: this.yMin,
+                ...this.getTargetRange(),
                 type: 'linear'
               }
             },
@@ -309,6 +318,51 @@ export class GfLineChartComponent
       easing: 'linear',
       from: NaN,
       type: 'number'
+    };
+  }
+
+  // bourse-custom : objectifs d'analystes en pointillés, étiquette à gauche
+  private getTargetAnnotations(): Record<string, AnnotationOptions<'line'>> {
+    return Object.fromEntries(
+      (this.targetLines ?? []).map(({ color, label, value }, index) => {
+        return [
+          `target${index}`,
+          {
+            borderColor: color,
+            borderDash: [6, 4],
+            borderWidth: 1.5,
+            label: {
+              backgroundColor: color,
+              borderRadius: 4,
+              color: '#ffffff',
+              content: label,
+              display: true,
+              font: { size: 11, weight: 'bold' },
+              padding: { x: 6, y: 3 },
+              position: 'start'
+            },
+            type: 'line',
+            yMax: value,
+            yMin: value
+          } as AnnotationOptions<'line'>
+        ];
+      })
+    );
+  }
+
+  /** Élargit l'axe pour que les objectifs restent visibles même loin du cours. */
+  private getTargetRange(): { suggestedMax?: number; suggestedMin?: number } {
+    const values = (this.targetLines ?? []).map(({ value }) => {
+      return value;
+    });
+
+    if (values.length === 0) {
+      return { suggestedMax: undefined, suggestedMin: undefined };
+    }
+
+    return {
+      suggestedMax: Math.max(...values) * 1.03,
+      suggestedMin: Math.min(...values) * 0.97
     };
   }
 

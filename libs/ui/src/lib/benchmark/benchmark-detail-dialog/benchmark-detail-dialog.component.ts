@@ -28,6 +28,7 @@ import { format } from 'date-fns';
 import { GfLineChartComponent } from '../../line-chart/line-chart.component';
 import { GfValueComponent } from '../../value/value.component';
 import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
+import { TargetLine, targetLines } from './target-lines.helper';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,6 +50,7 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
   public historicalDataItems: LineChartItem[];
   public isLoading = true;
   public precision = 2;
+  public targetLines: TargetLine[] = [];
   public value: number;
 
   public constructor(
@@ -88,6 +90,12 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
         ) {
           this.precision = 0;
         }
+
+        this.targetLines = targetLines(
+          this.data.analyst,
+          assetProfile?.currency,
+          this.data.locale
+        );
 
         this.isLoading = false;
 
