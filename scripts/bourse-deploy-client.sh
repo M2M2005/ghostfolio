@@ -15,14 +15,13 @@ npx nx run client:build:production --output-style=static >/dev/null
 node replace.build.mjs >/dev/null
 
 echo "→ envoi sur la VM…"
-tar -C dist/apps -czf - client | ssh -o ConnectTimeout=10 "$VM" '
+# Les fichiers sont extraits DANS le conteneur par l'utilisateur node (le conteneur n'a aucune
+# capacité root : ni chown, ni suppression de fichiers d'un autre utilisateur).
+tar -C dist/apps/client -czf - . | ssh -o ConnectTimeout=10 "$VM" '
   set -e
-  rm -rf ~/ghostfolio-client && mkdir -p ~/ghostfolio-client && tar -C ~/ghostfolio-client -xzf -
   cd ~/ghostfolio
   id=$(docker compose ps -q ghostfolio)
-  docker exec -u root "$id" rm -rf /ghostfolio/apps/client
-  docker cp ~/ghostfolio-client/client "$id":/ghostfolio/apps/client
-  docker exec -u root "$id" chown -R node:node /ghostfolio/apps/client
+  docker exec -i -u node "$id" sh -c "rm -rf /ghostfolio/apps/client/* /ghostfolio/apps/client/.well-known && tar -C /ghostfolio/apps/client -xzf -"
   docker restart "$id" >/dev/null
   for i in $(seq 1 30); do
     s=$(docker inspect -f "{{.State.Health.Status}}" "$id"); [ "$s" = healthy ] && break; sleep 3
