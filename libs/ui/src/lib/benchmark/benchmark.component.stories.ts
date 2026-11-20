@@ -102,7 +102,7 @@ export default {
   render: (args) => ({
     props: { ...args, benchmarks },
     // même mise en page que home-watchlist.html, dans la zone à droite du menu latéral
-    template: `<div id="zone" style="margin-left: 14rem"><div class="container-xxl" style="max-width: 1400px"><div class="row"><div class="col-12">
+    template: `<div id="zone" style="margin-left: 14rem"><div class="container" style="max-width: 1400px"><div class="row"><div class="col-12">
       <gf-benchmark deviceType="desktop" locale="fr" [benchmarks]="benchmarks" [hasPermissionToDeleteItem]="true" [showAnalystColumns]="true" [showIcon]="true" />
     </div></div></div></div>`
   })
