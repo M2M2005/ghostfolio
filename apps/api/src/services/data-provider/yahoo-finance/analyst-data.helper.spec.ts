@@ -1,4 +1,4 @@
-import { parseAnalystData } from './analyst-data.helper';
+import { parseAnalystData, shouldWarnNoAnalysts } from './analyst-data.helper';
 
 describe('parseAnalystData', () => {
   it('extracts targets, consensus and the share of buy ratings', () => {
@@ -75,5 +75,21 @@ describe('parseAnalystData', () => {
     expect(data.targetLow).toBeUndefined();
     expect(data.targetMedian).toBe(10);
     expect(data.buyPercent).toBeUndefined();
+  });
+});
+
+describe('shouldWarnNoAnalysts (bourse-custom)', () => {
+  it('avertit pour une action sans aucun analyste (cotation secondaire)', () => {
+    expect(shouldWarnNoAnalysts('STOCK', undefined)).toBe(true);
+    expect(shouldWarnNoAnalysts('STOCK', { numberOfAnalysts: undefined })).toBe(
+      true
+    );
+  });
+
+  it('se tait pour une action couverte, un ETF, une crypto ou un type inconnu', () => {
+    expect(shouldWarnNoAnalysts('STOCK', { numberOfAnalysts: 17 })).toBe(false);
+    expect(shouldWarnNoAnalysts('ETF', undefined)).toBe(false);
+    expect(shouldWarnNoAnalysts('CRYPTOCURRENCY', undefined)).toBe(false);
+    expect(shouldWarnNoAnalysts(undefined, undefined)).toBe(false);
   });
 });

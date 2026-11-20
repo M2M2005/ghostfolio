@@ -1,9 +1,11 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import { User } from '@ghostfolio/common/interfaces';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -18,6 +20,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { catchError, of } from 'rxjs';
 
 import { GfCreateWatchlistItemDialogComponent } from '../create-watchlist-item-dialog/create-watchlist-item-dialog.component';
 import { CreateWatchlistItemDialogParams } from '../create-watchlist-item-dialog/interfaces/interfaces';
@@ -36,6 +39,7 @@ export class GfWatchlistDialogHostComponent implements OnDestroy, OnInit {
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
   private readonly homeWatchlistService = inject(HomeWatchlistService);
+  private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
@@ -96,19 +100,54 @@ export class GfWatchlistDialogHostComponent implements OnDestroy, OnInit {
           return;
         }
 
+        // bourse-custom : avertir avant d'ajouter une action sans analyste (cotation secondaire)
         this.dataService
-          .postWatchlistItem({ dataSource, symbol })
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            error: () => {
-              this.navigateBack();
-            },
-            next: () => {
-              this.homeWatchlistService.triggerRefresh();
+          .fetchWatchlistAnalystCheck({ dataSource, symbol })
+          .pipe(
+            catchError(() => of({ warnNoAnalysts: false })),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe(({ warnNoAnalysts }) => {
+            if (!warnNoAnalysts) {
+              this.addItem(dataSource, symbol);
 
-              this.navigateBack();
+              return;
             }
+
+            this.notificationService.confirm({
+              confirmFn: () => {
+                this.addItem(dataSource, symbol);
+              },
+              confirmLabel: 'Ajouter quand même',
+              confirmType: ConfirmationDialogType.Warn,
+              disableClose: true,
+              discardFn: () => {
+                this.openDialog(user);
+              },
+              discardLabel: 'Choisir une autre cotation',
+              message: `Yahoo ne donne aucun objectif ni consensus d'analystes pour ${symbol} : c'est sans doute une cotation secondaire (autre place boursière). Choisis plutôt la cotation principale, sinon les colonnes d'analystes resteront vides et le bot ne pourra pas t'alerter sur cette action.`,
+              title: `${symbol} : aucune donnée d'analystes`
+            });
           });
+      });
+  }
+
+  private addItem(
+    dataSource: AssetProfileIdentifier['dataSource'],
+    symbol: string
+  ) {
+    this.dataService
+      .postWatchlistItem({ dataSource, symbol })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.navigateBack();
+        },
+        next: () => {
+          this.homeWatchlistService.triggerRefresh();
+
+          this.navigateBack();
+        }
       });
   }
 }

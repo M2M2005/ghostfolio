@@ -4,7 +4,10 @@ import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorat
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { CreateWatchlistItemDto } from '@ghostfolio/common/dtos';
-import { WatchlistResponse } from '@ghostfolio/common/interfaces';
+import {
+  AnalystCheckResponse,
+  WatchlistResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
@@ -70,6 +73,18 @@ export class WatchlistController {
       symbol,
       userId
     });
+  }
+
+  // bourse-custom : vérification avant ajout à la liste de suivi
+  @Get('analyst-check/:dataSource/:symbol')
+  @HasPermission(permissions.createWatchlistItem)
+  @RequiresScope(scopes.watchlistRead)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  public async getAnalystCheck(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<AnalystCheckResponse> {
+    return this.watchlistService.getAnalystCheck({ dataSource, symbol });
   }
 
   @Get()

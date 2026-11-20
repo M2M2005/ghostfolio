@@ -1,6 +1,7 @@
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { shouldWarnNoAnalysts } from '@ghostfolio/api/services/data-provider/yahoo-finance/analyst-data.helper';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -9,6 +10,7 @@ import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-ca
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
+  AnalystCheckResponse,
   AnalystData,
   AssetProfileIdentifier,
   WatchlistResponse
@@ -56,6 +58,25 @@ export class WatchlistService {
     }
 
     return data;
+  }
+
+  /** bourse-custom : vérification avant ajout (action sans analyste → avertissement) */
+  public async getAnalystCheck({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Promise<AnalystCheckResponse> {
+    if (dataSource !== DataSource.YAHOO) {
+      return { warnNoAnalysts: false };
+    }
+
+    const [profile, analyst] = await Promise.all([
+      this.yahooFinanceService.getAssetProfile({ symbol }),
+      this.yahooFinanceService.getAnalystData(symbol)
+    ]);
+
+    return {
+      warnNoAnalysts: shouldWarnNoAnalysts(profile?.assetSubClass, analyst)
+    };
   }
 
   public async createWatchlistItem({

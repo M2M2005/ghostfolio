@@ -7,7 +7,10 @@ import type { AdminJobs } from './admin-jobs.interface';
 import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
 import type { AdminUser } from './admin-user.interface';
 import type { AiActivityRow } from './ai-activity-row.interface';
-import type { AnalystData } from './analyst-data.interface';
+import type {
+  AnalystCheckResponse,
+  AnalystData
+} from './analyst-data.interface';
 import type { AssetClassSelectorOption } from './asset-class-selector-option.interface';
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { AssetProfileItem } from './asset-profile-item.interface';
@@ -113,6 +116,7 @@ import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
+  AnalystCheckResponse,
   AnalystData,
   AccessResponse,
   AccessSettings,

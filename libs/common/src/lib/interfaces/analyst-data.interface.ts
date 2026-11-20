@@ -12,3 +12,9 @@ export interface AnalystData {
   targetMean?: number;
   targetMedian?: number;
 }
+
+/** Vérification avant ajout à la liste de suivi (modification bourse-custom) */
+export interface AnalystCheckResponse {
+  /** Action sans aucun analyste sur Yahoo : sans doute une cotation secondaire */
+  warnNoAnalysts: boolean;
+}

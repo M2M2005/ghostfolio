@@ -22,6 +22,7 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AccessResponse,
+  AnalystCheckResponse,
   AccessTokenResponse,
   AccessesResponse,
   AccountBalanceResponse,
@@ -860,6 +861,16 @@ export class DataService {
 
   public fetchTags() {
     return this.http.get<TagWithAccountAndActivityCount[]>('/api/v1/tags');
+  }
+
+  // bourse-custom : vérification avant ajout à la liste de suivi
+  public fetchWatchlistAnalystCheck({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    return this.http.get<AnalystCheckResponse>(
+      `/api/v1/watchlist/analyst-check/${dataSource}/${encodeURIComponent(symbol)}`
+    );
   }
 
   public fetchWatchlist() {

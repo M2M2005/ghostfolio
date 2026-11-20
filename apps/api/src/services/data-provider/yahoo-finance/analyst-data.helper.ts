@@ -61,3 +61,14 @@ export function parseAnalystData(summary: {
       ) as AnalystData)
     : undefined;
 }
+
+/**
+ * Avertir à l'ajout dans la liste de suivi : action (STOCK) sans aucun analyste, typiquement une
+ * cotation secondaire (ex. 3HM.SG au lieu de MSCI). Les ETF, cryptos… n'ont jamais d'analystes.
+ */
+export function shouldWarnNoAnalysts(
+  assetSubClass: string | undefined,
+  analyst: AnalystData | undefined
+): boolean {
+  return assetSubClass === 'STOCK' && !analyst?.numberOfAnalysts;
+}
