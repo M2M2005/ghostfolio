@@ -1,6 +1,7 @@
 import {
   change1m,
   trendClass,
+  consensusClass,
   consensusLabel,
   potential,
   sparkPoints
@@ -48,5 +49,20 @@ describe('trendClass (bourse-custom)', () => {
     expect(trendClass([100, 110])).toBe('text-success');
     expect(trendClass([110, 100])).toBe('text-danger');
     expect(trendClass([1])).toBe('');
+  });
+});
+
+describe('consensusClass', () => {
+  it('colore achat, vente et neutre', () => {
+    expect(consensusClass({ recommendationKey: 'strong_buy' })).toBe(
+      'pill pill-buy'
+    );
+    expect(consensusClass({ recommendationKey: 'underperform' })).toBe(
+      'pill pill-sell'
+    );
+    expect(consensusClass({ recommendationKey: 'hold' })).toBe(
+      'pill pill-hold'
+    );
+    expect(consensusClass(undefined)).toBe('');
   });
 });

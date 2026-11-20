@@ -1,10 +1,38 @@
+// Tableaux au style de bourse.cyprienbons.com (modification bourse-custom) :
+// en-têtes discrets, séparateurs fins, pas de zébrage, chiffres alignés, pastilles de consensus.
 @mixin gf-table($darkTheme: false) {
-  --mat-table-background-color: var(--light-background);
+  --gf-table-line: #e2e6eb;
+  --gf-table-grid: #eef1f4;
+  --gf-table-muted: #5a6573;
+  --gf-table-hover: rgba(42, 120, 214, 0.04);
+  --gf-good: #0c8a4f;
+  --gf-good-soft: #e3f4ea;
+  --gf-bad: #cf3a3a;
+  --gf-bad-soft: #fbe7e7;
+  --gf-info: #5a6573;
+  --gf-info-soft: #eceff3;
+  --mat-table-background-color: transparent;
+  --mat-table-row-item-outline-color: var(--gf-table-grid);
+  --mat-table-header-headline-color: var(--gf-table-muted);
+  --mat-table-header-headline-size: 12px;
+  --mat-table-header-headline-weight: 500;
+  --mat-table-header-container-height: 36px;
+  --mat-table-row-item-container-height: 48px;
+
+  font-variant-numeric: tabular-nums;
 
   th {
+    border-bottom: 1px solid var(--gf-table-line) !important;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+
     .mat-sort-header-container {
       justify-content: inherit;
     }
+  }
+
+  td {
+    border-bottom: 1px solid var(--gf-table-grid);
   }
 
   .mat-footer-row,
@@ -17,44 +45,65 @@
 
   .mat-mdc-footer-row {
     .mat-mdc-footer-cell {
-      border-top: 1px solid
-        rgba(
-          var(--palette-foreground-divider),
-          var(--palette-foreground-divider-alpha)
-        );
+      border-top: 1px solid var(--gf-table-line);
+      font-weight: 600;
     }
   }
 
   .mat-mdc-row {
-    &:nth-child(even) {
-      background-color: whitesmoke;
+    transition: background-color 0.12s ease;
+
+    &:last-child td {
+      border-bottom: 0;
     }
 
     &:hover {
-      background-color: #e6e6e6 !important;
+      background-color: var(--gf-table-hover) !important;
     }
   }
 
+  .text-success {
+    color: var(--gf-good) !important;
+  }
+
+  .text-danger {
+    color: var(--gf-bad) !important;
+  }
+
+  .pill {
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    padding: 2px 8px;
+  }
+
+  .pill-buy {
+    background: var(--gf-good-soft);
+    color: var(--gf-good);
+  }
+
+  .pill-sell {
+    background: var(--gf-bad-soft);
+    color: var(--gf-bad);
+  }
+
+  .pill-hold {
+    background: var(--gf-info-soft);
+    color: var(--gf-info);
+  }
+
   @if $darkTheme {
-    --mat-table-background-color: var(--dark-background);
-
-    .mat-mdc-footer-row {
-      .mat-mdc-footer-cell {
-        border-top-color: rgba(
-          var(--palette-foreground-divider-dark),
-          var(--palette-foreground-divider-dark-alpha)
-        );
-      }
-    }
-
-    .mat-mdc-row {
-      &:nth-child(even) {
-        background-color: #222222;
-      }
-
-      &:hover {
-        background-color: #303030 !important;
-      }
-    }
+    --gf-table-line: #242c36;
+    --gf-table-grid: #1c232c;
+    --gf-table-muted: #9aa4b0;
+    --gf-table-hover: rgba(57, 135, 229, 0.06);
+    --gf-good: #2fbf71;
+    --gf-good-soft: #13291e;
+    --gf-bad: #ef5d5d;
+    --gf-bad-soft: #321a1b;
+    --gf-info: #9aa4b0;
+    --gf-info-soft: #1f2630;
   }
 }

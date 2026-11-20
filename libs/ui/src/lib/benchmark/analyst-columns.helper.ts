@@ -27,6 +27,21 @@ export function change1m(values?: number[]): number | undefined {
   return before ? last / before - 1 : undefined;
 }
 
+/** Classe de pastille du consensus : achat (vert), vente (rouge), neutre (gris). */
+export function consensusClass(analyst: AnalystData | undefined): string {
+  const key = analyst?.recommendationKey;
+
+  if (key === 'buy' || key === 'strong_buy') {
+    return 'pill pill-buy';
+  }
+
+  if (key === 'sell' || key === 'underperform' || key === 'strong_sell') {
+    return 'pill pill-sell';
+  }
+
+  return key ? 'pill pill-hold' : '';
+}
+
 export function consensusLabel(
   analyst: AnalystData | undefined,
   locale: string

@@ -264,7 +264,9 @@
     <ng-container matColumnDef="consensus">
       <th *matHeaderCellDef class="px-1" mat-header-cell>Consensus</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        <small>{{ consensusLabel(element?.analyst, locale()) }}</small>
+        <span [class]="consensusClass(element?.analyst)">{{
+          consensusLabel(element?.analyst, locale())
+        }}</span>
       </td>
     </ng-container>
 

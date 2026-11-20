@@ -43,6 +43,7 @@ import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.co
 import { GfValueComponent } from '../value/value.component';
 import {
   change1m,
+  consensusClass,
   consensusLabel,
   potential,
   sparkPoints,
@@ -124,6 +125,7 @@ export class GfBenchmarkComponent implements OnInit {
   });
 
   protected readonly change1m = change1m;
+  protected readonly consensusClass = consensusClass;
   protected readonly consensusLabel = consensusLabel;
   protected readonly isNumber = isNumber;
   protected readonly potential = potential;
