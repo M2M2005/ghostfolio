@@ -614,11 +614,11 @@ export class DataGatheringService {
         return isDataGatheringSupported({ dataSource, scraperConfiguration });
       })
       .map((symbolProfile) => {
-        // bourse-custom : au moins 5 ans d'historique pour chaque titre (graphique de la fiche,
-        // boutons 1 M … 5 A), même sans opération ou avec un achat récent
+        // bourse-custom : au moins 10 ans d'historique pour chaque titre (graphique de la fiche,
+        // boutons 1 M … 10 A), même sans opération ou avec un achat récent
         let date = min([
           symbolProfile.activities?.[0]?.date ?? startDate,
-          subYears(new Date(), 5)
+          subYears(new Date(), 10)
         ]);
 
         if (benchmarkAssetProfileIdMap[symbolProfile.id]) {

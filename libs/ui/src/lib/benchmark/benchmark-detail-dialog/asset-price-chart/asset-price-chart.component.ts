@@ -37,6 +37,7 @@ const RANGES = [
   { days: 182, label: '6 M' },
   { days: 365, label: '1 A' },
   { days: 1826, label: '5 A' },
+  { days: 3652, label: '10 A' },
   { days: 0, label: 'Tout' }
 ];
 
