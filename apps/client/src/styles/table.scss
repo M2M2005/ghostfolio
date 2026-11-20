@@ -11,15 +11,45 @@
   --gf-bad-soft: #fbe7e7;
   --gf-info: #5a6573;
   --gf-info-soft: #eceff3;
+  --gf-table-surface: #ffffff;
+  --gf-table-head: #f7f9fb;
+  --gf-up-1: rgba(12, 138, 79, 0.08);
+  --gf-up-2: rgba(12, 138, 79, 0.16);
+  --gf-up-3: rgba(12, 138, 79, 0.28);
+  --gf-down-1: rgba(207, 58, 58, 0.08);
+  --gf-down-2: rgba(207, 58, 58, 0.16);
+  --gf-down-3: rgba(207, 58, 58, 0.28);
   --mat-table-background-color: transparent;
   --mat-table-row-item-outline-color: var(--gf-table-grid);
   --mat-table-header-headline-color: var(--gf-table-muted);
-  --mat-table-header-headline-size: 12px;
   --mat-table-header-headline-weight: 500;
-  --mat-table-header-container-height: 36px;
-  --mat-table-row-item-container-height: 48px;
+  --mat-table-header-container-height: 44px;
+  --mat-table-row-item-container-height: 58px;
+  --mat-table-row-item-label-text-size: 15px;
+  --mat-table-header-headline-size: 13px;
 
+  background: var(--gf-table-surface);
+  border: 1px solid var(--gf-table-line);
+  border-collapse: separate !important;
+  border-radius: 12px;
+  border-spacing: 0;
+  font-size: 15px;
   font-variant-numeric: tabular-nums;
+  overflow: hidden;
+
+  th:first-child,
+  td:first-child {
+    padding-left: 14px !important;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 14px !important;
+  }
+
+  th {
+    background: var(--gf-table-head);
+  }
 
   th {
     border-bottom: 1px solid var(--gf-table-line) !important;
@@ -70,13 +100,29 @@
     color: var(--gf-bad) !important;
   }
 
+  // valeurs colorées selon le signe et l'ampleur (heatClass)
+  .heat {
+    border-radius: 6px;
+    min-width: 64px;
+    padding: 3px 8px;
+    text-align: right;
+  }
+
+  @each $dir in up, down {
+    @for $level from 1 through 3 {
+      .heat-#{$dir}-#{$level} {
+        background: var(--gf-#{$dir}-#{$level});
+      }
+    }
+  }
+
   .pill {
     border-radius: 999px;
     display: inline-block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     line-height: 1.5;
-    padding: 2px 8px;
+    padding: 3px 10px;
   }
 
   .pill-buy {
@@ -95,6 +141,14 @@
   }
 
   @if $darkTheme {
+    --gf-table-surface: #151b23;
+    --gf-table-head: #1a212a;
+    --gf-up-1: rgba(47, 191, 113, 0.1);
+    --gf-up-2: rgba(47, 191, 113, 0.2);
+    --gf-up-3: rgba(47, 191, 113, 0.32);
+    --gf-down-1: rgba(239, 93, 93, 0.1);
+    --gf-down-2: rgba(239, 93, 93, 0.2);
+    --gf-down-3: rgba(239, 93, 93, 0.32);
     --gf-table-line: #242c36;
     --gf-table-grid: #1c232c;
     --gf-table-muted: #9aa4b0;

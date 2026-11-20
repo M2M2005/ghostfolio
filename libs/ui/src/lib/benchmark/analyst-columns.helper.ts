@@ -105,3 +105,18 @@ export function trendClass(values?: number[]): string {
 
   return change >= 0 ? 'text-success' : 'text-danger';
 }
+
+/**
+ * Fond coloré d'une cellule selon le signe et l'ampleur de la valeur (fraction) :
+ * niveau 1 sous `step`, 2 sous 3 × `step`, 3 au-delà (vert si ≥ 0, rouge sinon).
+ */
+export function heatClass(value: number | undefined, step: number): string {
+  if (value === undefined || !Number.isFinite(value)) {
+    return '';
+  }
+
+  const size = Math.abs(value);
+  const level = size < step ? 1 : size < 3 * step ? 2 : 3;
+
+  return `heat heat-${value >= 0 ? 'up' : 'down'}-${level}`;
+}

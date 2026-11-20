@@ -3,6 +3,7 @@ import {
   trendClass,
   consensusClass,
   consensusLabel,
+  heatClass,
   potential,
   sparkPoints
 } from './analyst-columns.helper';
@@ -64,5 +65,16 @@ describe('consensusClass', () => {
       'pill pill-hold'
     );
     expect(consensusClass(undefined)).toBe('');
+  });
+});
+
+describe('heatClass', () => {
+  it('gradue la couleur selon le signe et l’ampleur', () => {
+    expect(heatClass(0.05, 0.1)).toBe('heat heat-up-1');
+    expect(heatClass(0.2, 0.1)).toBe('heat heat-up-2');
+    expect(heatClass(0.45, 0.1)).toBe('heat heat-up-3');
+    expect(heatClass(-0.04, 0.03)).toBe('heat heat-down-2');
+    expect(heatClass(-0.5, 0.1)).toBe('heat heat-down-3');
+    expect(heatClass(undefined, 0.1)).toBe('');
   });
 });

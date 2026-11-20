@@ -45,6 +45,7 @@ import {
   change1m,
   consensusClass,
   consensusLabel,
+  heatClass,
   potential,
   sparkPoints,
   trendClass
@@ -127,6 +128,7 @@ export class GfBenchmarkComponent implements OnInit {
   protected readonly change1m = change1m;
   protected readonly consensusClass = consensusClass;
   protected readonly consensusLabel = consensusLabel;
+  protected readonly heatClass = heatClass;
   protected readonly isNumber = isNumber;
   protected readonly potential = potential;
   protected readonly sparkPoints = sparkPoints;

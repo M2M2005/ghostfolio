@@ -174,6 +174,7 @@
         @if (isNumber(change1m(element?.sparkline))) {
           <gf-value
             class="d-inline-block justify-content-end"
+            [class]="heatClass(change1m(element?.sparkline), 0.03)"
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale()"
@@ -209,6 +210,12 @@
         ) {
           <gf-value
             class="d-inline-block fw-bold justify-content-end"
+            [class]="
+              heatClass(
+                potential(element?.marketPrice, element?.analyst?.targetLow),
+                0.1
+              )
+            "
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale()"
@@ -249,6 +256,12 @@
         ) {
           <gf-value
             class="d-inline-block fw-bold justify-content-end"
+            [class]="
+              heatClass(
+                potential(element?.marketPrice, element?.analyst?.targetMedian),
+                0.1
+              )
+            "
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale()"
