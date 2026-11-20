@@ -1,3 +1,17 @@
+@if (showAnalystColumns() && categories().length > 2) {
+  <!-- bourse-custom : filtre par catégorie -->
+  <div aria-label="Filtrer par catégorie" class="categories mb-3" role="group">
+    @for (item of categories(); track item.key) {
+      <button
+        type="button"
+        [attr.aria-pressed]="category() === item.key"
+        (click)="category.set(item.key)"
+      >
+        {{ item.label }} <span class="count">{{ item.count }}</span>
+      </button>
+    }
+  </div>
+}
 <div class="overflow-x-auto">
   <table
     class="gf-table w-100"

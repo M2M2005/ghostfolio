@@ -138,3 +138,22 @@ export function heatClass(value: number | undefined, step: number): string {
 
   return `heat heat-${value >= 0 ? 'up' : 'down'}-${level}`;
 }
+
+export type AssetCategory = 'action' | 'autre' | 'crypto' | 'etf';
+
+/** Catégorie du filtre de la liste de suivi, d'après la sous-classe d'actif Ghostfolio. */
+export function assetCategory(
+  assetSubClass: string | undefined
+): AssetCategory {
+  switch (assetSubClass) {
+    case 'STOCK':
+      return 'action';
+    case 'ETF':
+    case 'MUTUALFUND':
+      return 'etf';
+    case 'CRYPTOCURRENCY':
+      return 'crypto';
+    default:
+      return 'autre';
+  }
+}

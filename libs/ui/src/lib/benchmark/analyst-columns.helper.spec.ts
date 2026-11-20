@@ -1,4 +1,5 @@
 import {
+  assetCategory,
   change1m,
   trendClass,
   consensusClass,
@@ -93,5 +94,16 @@ describe('consensusName / consensusDetail', () => {
     expect(consensusDetail(analyst, 'fr')).toBe('1,8 · 67 %');
     expect(consensusName(undefined)).toBe('');
     expect(consensusDetail(undefined, 'fr')).toBe('');
+  });
+});
+
+describe('assetCategory (filtre de la liste de suivi)', () => {
+  it('range chaque titre dans Actions, ETF, Crypto ou Autre', () => {
+    expect(assetCategory('STOCK')).toBe('action');
+    expect(assetCategory('ETF')).toBe('etf');
+    expect(assetCategory('MUTUALFUND')).toBe('etf');
+    expect(assetCategory('CRYPTOCURRENCY')).toBe('crypto');
+    expect(assetCategory('PRECIOUS_METAL')).toBe('autre');
+    expect(assetCategory(undefined)).toBe('autre');
   });
 });

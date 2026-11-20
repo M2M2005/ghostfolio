@@ -198,6 +198,7 @@ export class WatchlistService {
           dataSource,
           symbol,
           analyst,
+          assetSubClass: assetProfile?.assetSubClass ?? undefined,
           currency: quote?.currency,
           marketPrice: quote?.marketPrice,
           sparkline: history.map(({ marketPrice }) => {

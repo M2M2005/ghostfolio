@@ -6,6 +6,8 @@ import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 export interface Benchmark {
   /** Liste de suivi uniquement (modification bourse-custom) */
   analyst?: AnalystData;
+  /** Liste de suivi : sous-classe d'actif (filtre Actions / ETF / Crypto / Autre) */
+  assetSubClass?: string;
   currency?: string;
   dataSource: EnhancedAssetProfile['dataSource'];
   marketCondition: 'ALL_TIME_HIGH' | 'BEAR_MARKET' | 'NEUTRAL_MARKET';

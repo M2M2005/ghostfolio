@@ -22,6 +22,7 @@ import {
   inject,
   input,
   output,
+  signal,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -42,6 +43,8 @@ import { translate } from '../i18n';
 import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.component';
 import { GfValueComponent } from '../value/value.component';
 import {
+  AssetCategory,
+  assetCategory,
   change1m,
   consensusClass,
   consensusDetail,
@@ -90,6 +93,35 @@ export class GfBenchmarkComponent implements OnInit {
   protected readonly sort = viewChild(MatSort);
 
   protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
+
+  // bourse-custom : filtre de la liste de suivi par catégorie
+  protected readonly category = signal<AssetCategory | 'all'>('all');
+  protected readonly categories = computed(() => {
+    const benchmarks = this.benchmarks() ?? [];
+    const count = (key: AssetCategory | 'all') => {
+      return key === 'all'
+        ? benchmarks.length
+        : benchmarks.filter(({ assetSubClass }) => {
+            return assetCategory(assetSubClass) === key;
+          }).length;
+    };
+
+    return (
+      [
+        { key: 'all', label: 'Tout' },
+        { key: 'action', label: 'Actions' },
+        { key: 'etf', label: 'ETF' },
+        { key: 'crypto', label: 'Crypto' },
+        { key: 'autre', label: 'Autre' }
+      ] as { key: AssetCategory | 'all'; label: string }[]
+    )
+      .map((item) => {
+        return { ...item, count: count(item.key) };
+      })
+      .filter(({ count: n, key }) => {
+        return key === 'all' || n > 0;
+      });
+  });
 
   protected readonly displayedColumns = computed(() => {
     if (this.showAnalystColumns()) {
@@ -148,9 +180,15 @@ export class GfBenchmarkComponent implements OnInit {
   public constructor() {
     effect(() => {
       const benchmarks = this.benchmarks();
+      const category = this.category();
 
       if (benchmarks) {
-        this.dataSource.data = benchmarks;
+        this.dataSource.data =
+          category === 'all'
+            ? benchmarks
+            : benchmarks.filter(({ assetSubClass }) => {
+                return assetCategory(assetSubClass) === category;
+              });
         this.dataSource.sortingDataAccessor = getLowercase;
 
         this.dataSource.sort = this.sort() ?? null;

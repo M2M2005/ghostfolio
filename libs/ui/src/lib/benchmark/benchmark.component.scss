@@ -11,3 +11,55 @@
     width: 100%;
   }
 }
+
+// bourse-custom : filtre par catégorie (même style que les boutons de période)
+.categories {
+  background: rgba(var(--palette-foreground-base), 0.03);
+  border: 1px solid rgba(var(--palette-foreground-base), 0.1);
+  border-radius: 8px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 2px;
+
+  button {
+    background: none;
+    border: 0;
+    border-radius: 6px;
+    color: rgba(var(--palette-foreground-base), 0.6);
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 12px;
+
+    .count {
+      font-weight: 500;
+      opacity: 0.6;
+    }
+
+    &[aria-pressed='true'] {
+      background: rgba(var(--palette-background-card), 1);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+      color: rgba(var(--palette-foreground-base), 1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(var(--palette-primary-500), 1);
+      outline-offset: 1px;
+    }
+  }
+}
+
+:host-context(.theme-dark) .categories {
+  background: rgba(var(--palette-foreground-base-dark), 0.03);
+  border-color: rgba(var(--palette-foreground-base-dark), 0.12);
+
+  button {
+    color: rgba(var(--palette-foreground-base-dark), 0.6);
+
+    &[aria-pressed='true'] {
+      background: rgba(var(--palette-background-card-dark), 1);
+      color: rgba(var(--palette-foreground-base-dark), 1);
+    }
+  }
+}

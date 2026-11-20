@@ -32,7 +32,8 @@ function item(
   low: number,
   median: number,
   key: string,
-  drift: number
+  drift: number,
+  assetSubClass = 'STOCK'
 ): Benchmark {
   const sparkline = spark(price / (1 + drift * 64), drift);
 
@@ -45,6 +46,7 @@ function item(
       targetLow: low,
       targetMedian: median
     },
+    assetSubClass,
     currency: 'EUR',
     dataSource: 'YAHOO',
     marketCondition: 'NEUTRAL_MARKET',
@@ -61,6 +63,32 @@ function item(
 }
 
 const benchmarks: Benchmark[] = [
+  {
+    ...item(
+      'Bitcoin EUR',
+      'BTC-EUR',
+      54700,
+      0,
+      0,
+      '',
+      -0.003,
+      'CRYPTOCURRENCY'
+    ),
+    analyst: undefined
+  },
+  {
+    ...item(
+      'Amundi Physical Gold ETC C',
+      'GLDA.DE',
+      128,
+      0,
+      0,
+      '',
+      -0.002,
+      'PRECIOUS_METAL'
+    ),
+    analyst: undefined
+  },
   item('Alphabet Inc.', 'GOOG', 264, 230, 300, 'strong_buy', 0.002),
   {
     ...item(
@@ -70,7 +98,8 @@ const benchmarks: Benchmark[] = [
       0,
       0,
       '',
-      -0.001
+      -0.001,
+      'ETF'
     ),
     analyst: undefined
   },
