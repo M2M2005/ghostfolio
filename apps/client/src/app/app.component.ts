@@ -1,3 +1,4 @@
+import { GfSideNavComponent } from '@ghostfolio/client/components/side-nav/side-nav.component';
 import {
   getBackgroundColor,
   getCssVariable,
@@ -52,7 +53,13 @@ import { UserService } from './services/user/user.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfFooterComponent, GfHeaderComponent, RouterLink, RouterOutlet],
+  imports: [
+    GfFooterComponent,
+    GfHeaderComponent,
+    GfSideNavComponent,
+    RouterLink,
+    RouterOutlet
+  ],
   selector: 'gf-root',
   styleUrls: ['./app.component.scss'],
   templateUrl: './app.component.html'
@@ -67,6 +74,11 @@ export class GfAppComponent implements OnInit {
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
+
+  /** bourse-custom : menu latéral (ordinateur, utilisateur connecté) */
+  public get hasSideNav(): boolean {
+    return !!this.user && this.deviceType !== 'mobile';
+  }
   public impersonationId: string | null;
   public info: InfoItem;
   public pageTitle: string;

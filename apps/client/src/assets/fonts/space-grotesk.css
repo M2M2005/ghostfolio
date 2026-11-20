@@ -1,0 +1,8 @@
+/* Space Grotesk (SIL Open Font License) – titres, comme bourse.cyprienbons.com (bourse-custom) */
+@font-face {
+  font-display: swap;
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  src: url('SpaceGrotesk-latin.woff2') format('woff2');
+}

@@ -13,115 +13,7 @@
     </div>
     <span class="gf-spacer"></span>
     <ul class="align-items-center d-flex list-inline m-0 px-2">
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block rounded"
-          i18n
-          mat-button
-          [class]="{
-            'fw-bold':
-              currentRoute() === internalRoutes.home.path ||
-              currentRoute() === internalRoutes.zen.path,
-            'text-decoration-underline':
-              currentRoute() === internalRoutes.home.path ||
-              currentRoute() === internalRoutes.zen.path
-          }"
-          [routerLink]="['/']"
-          >Overview</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block rounded"
-          i18n
-          mat-button
-          [class]="{
-            'fw-bold': currentRoute() === internalRoutes.portfolio.path,
-            'text-decoration-underline':
-              currentRoute() === internalRoutes.portfolio.path
-          }"
-          [routerLink]="routerLinkPortfolio"
-          >Portfolio</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block rounded"
-          i18n
-          mat-button
-          [class]="{
-            'fw-bold': currentRoute() === internalRoutes.accounts.path,
-            'text-decoration-underline':
-              currentRoute() === internalRoutes.accounts.path
-          }"
-          [routerLink]="routerLinkAccounts"
-          >Accounts</a
-        >
-      </li>
-      @if (hasPermissionToAccessAdminControl) {
-        <li class="list-inline-item">
-          <a
-            class="d-none d-sm-block rounded"
-            i18n
-            mat-button
-            [class]="{
-              'fw-bold': currentRoute() === internalRoutes.adminControl.path,
-              'text-decoration-underline':
-                currentRoute() === internalRoutes.adminControl.path
-            }"
-            [routerLink]="routerLinkAdminControl"
-            >Admin Control</a
-          >
-        </li>
-      }
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block rounded"
-          i18n
-          mat-button
-          [class]="{
-            'fw-bold': currentRoute() === routeResources,
-            'text-decoration-underline': currentRoute() === routeResources
-          }"
-          [routerLink]="routerLinkResources"
-          >Resources</a
-        >
-      </li>
-      @if (
-        hasPermissionForSubscription && user()?.subscription?.type === 'Basic'
-      ) {
-        <li class="list-inline-item">
-          <a
-            class="d-none d-sm-block rounded"
-            mat-button
-            [class]="{
-              'fw-bold': currentRoute() === routePricing,
-              'text-decoration-underline': currentRoute() === routePricing
-            }"
-            [routerLink]="routerLinkPricing"
-          >
-            <span class="align-items-center d-flex">
-              <span i18n>Pricing</span>
-              @if (currentRoute() !== routePricing && hasPromotion()) {
-                <span class="badge gf-promotion-badge ms-1 text-dark">%</span>
-              }
-            </span>
-          </a>
-        </li>
-      }
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block rounded"
-          i18n
-          mat-button
-          [class]="{
-            'fw-bold': currentRoute() === routeAbout,
-            'text-decoration-underline': currentRoute() === routeAbout
-          }"
-          [routerLink]="routerLinkAbout"
-          >About</a
-        >
-      </li>
+      <!-- bourse-custom : catégories déplacées dans le menu latéral, « À propos » supprimé -->
       @if (hasPermissionToAccessAssistant && user(); as user) {
         <li class="d-inline-flex list-inline-item">
           <button
@@ -310,14 +202,6 @@
               </span>
             </a>
           }
-          <a
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [class.fw-bold]="currentRoute() === routeAbout"
-            [routerLink]="routerLinkAbout"
-            >About Ghostfolio</a
-          >
           <hr class="d-flex d-sm-none m-0" />
           <button i18n mat-menu-item (click)="onSignOut()">Log out</button>
         </mat-menu>
@@ -354,19 +238,6 @@
           }"
           [routerLink]="routerLinkFeatures"
           >Features</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block rounded"
-          i18n
-          mat-button
-          [class]="{
-            'fw-bold': currentRoute() === routeAbout,
-            'text-decoration-underline': currentRoute() === routeAbout
-          }"
-          [routerLink]="routerLinkAbout"
-          >About</a
         >
       </li>
       @if (hasPermissionForSubscription) {

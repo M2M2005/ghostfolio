@@ -17,18 +17,19 @@ export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
 export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
 
-export const primaryColorHex = '#36cfcc';
+// bourse-custom : couleurs de bourse.cyprienbons.com
+export const primaryColorHex = '#2a78d6';
 export const primaryColorRgb = {
-  r: 54,
-  g: 207,
-  b: 204
+  r: 42,
+  g: 120,
+  b: 214
 };
 
-export const secondaryColorHex = '#3686cf';
+export const secondaryColorHex = '#eb6834';
 export const secondaryColorRgb = {
-  r: 54,
-  g: 134,
-  b: 207
+  r: 235,
+  g: 104,
+  b: 52
 };
 
 export const AI_ACTIVITIES_FILE_MAXIMUM_SIZE = 10 * 1024 * 1024;

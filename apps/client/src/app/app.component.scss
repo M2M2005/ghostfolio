@@ -41,4 +41,11 @@
   main {
     min-height: calc(100svh - var(--mat-toolbar-standard-height));
   }
+
+  // bourse-custom : place pour le menu latéral
+  main.with-side-nav {
+    @media (min-width: 576px) {
+      margin-left: 14rem;
+    }
+  }
 }

@@ -7,20 +7,20 @@ $light-primary-text: white;
 $_palettes: (
   primary: (
     0: #000000,
-    10: #00201f,
-    20: #003736,
-    25: #004342,
-    30: #00504e,
-    35: #005d5b,
-    40: #006a68,
-    50: #008583,
-    60: #00a19f,
-    70: #11bebc,
-    80: #47dbd7,
-    90: #6bf7f4,
-    95: #affffc,
-    98: #e3fffd,
-    99: #f2fffe,
+    10: #0b1827,
+    20: #0f2e55,
+    25: #133a6a,
+    30: #16467f,
+    35: #1a5195,
+    40: #1e5daa,
+    50: #2574d4,
+    60: #4c8fdf,
+    70: #77a9e7,
+    80: #a1c4ee,
+    90: #d0dff1,
+    95: #e4ecf7,
+    98: #eff4fa,
+    99: #f3f7fc,
     100: #ffffff
   ),
   secondary: (
@@ -452,10 +452,10 @@ $_dense-form-field-theme: mat.define-theme(
 
 :root {
   --gf-theme-alpha-hover: 0.04;
-  --gf-theme-primary-500: #36cfcc;
-  --gf-theme-primary-500-rgb: 0, 187, 255;
-  --gf-theme-secondary-500: #3686cf;
-  --gf-theme-secondary-500-rgb: 78, 208, 94;
+  --gf-theme-primary-500: #2a78d6;
+  --gf-theme-primary-500-rgb: 42, 120, 214;
+  --gf-theme-secondary-500: #eb6834;
+  --gf-theme-secondary-500-rgb: 235, 104, 52;
 
   --mat-dialog-container-small-max-width: 96vw;
   --mat-button-filled-label-text-tracking: normal;

@@ -206,7 +206,8 @@ export function getValueAxisOptions({
           return borderColor;
         }
 
-        return 'transparent';
+        // bourse-custom : quadrillage horizontal discret, comme bourse.cyprienbons.com
+        return `rgba(${getTextColor(colorScheme)}, 0.05)`;
       }
     },
     position: 'right',

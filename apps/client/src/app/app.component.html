@@ -34,7 +34,7 @@
     [hasPermissionToChangeDateRange]="hasPermissionToChangeDateRange"
     [hasPermissionToChangeFilters]="hasPermissionToChangeFilters"
     [hasPromotion]="hasPromotion"
-    [hasTabs]="hasTabs"
+    [hasTabs]="hasTabs || hasSideNav"
     [info]="info"
     [pageTitle]="pageTitle"
     [user]="user"
@@ -42,7 +42,12 @@
   />
 </header>
 
-<main role="main">
+@if (hasSideNav) {
+  <!-- bourse-custom : menu latéral déplié -->
+  <gf-side-nav class="d-none d-sm-block" [user]="user" />
+}
+
+<main role="main" [class.with-side-nav]="hasSideNav">
   <router-outlet />
 </main>
 

@@ -1,8 +1,20 @@
-<div class="mb-2 row">
-  <div class="col d-flex">
-    <div class="align-items-center d-flex flex-grow-1 h5 mb-0 py-2">
-      <span>Performance depuis l'achat</span>
-    </div>
+<div
+  class="align-items-center d-flex flex-wrap gap-2 justify-content-between mb-2"
+>
+  <div>
+    <div class="h5 mb-0">Performance depuis l'achat</div>
+    <div class="legend-date">{{ legendDate }}</div>
+  </div>
+  <div aria-label="Période" class="ranges" role="group">
+    @for (r of ranges; track r.days) {
+      <button
+        type="button"
+        [attr.aria-pressed]="range === r.days"
+        (click)="onRange(r.days)"
+      >
+        {{ r.label }}
+      </button>
+    }
   </div>
 </div>
 @if (legend.length > 0) {
@@ -37,8 +49,11 @@
       Aucune position détenue pour l'instant.
     </p>
   }
-  <canvas
-    #chartCanvas
+  <div
+    #chartContainer
+    aria-label="Performance en pourcentage depuis la date d'achat de chaque position et du portefeuille"
+    class="chart"
+    role="img"
     [class.d-none]="isLoading() || legend.length === 0"
-  ></canvas>
+  ></div>
 </div>

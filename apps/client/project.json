@@ -88,6 +88,7 @@
         "sourceMap": true,
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
+          "apps/client/src/assets/fonts/space-grotesk.css",
           "apps/client/src/styles/theme.scss",
           "apps/client/src/styles.scss",
           "node_modules/open-color/open-color.css"

@@ -1,0 +1,18 @@
+<nav aria-label="Navigation principale">
+  @for (section of sections(); track section.title) {
+    <div class="section">
+      <div class="section-title">{{ section.title }}</div>
+      @for (item of section.items; track item.label) {
+        <a
+          class="item"
+          routerLinkActive="active"
+          [routerLink]="item.routerLink"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <ion-icon class="flex-shrink-0" size="small" [name]="item.iconName" />
+          <span class="text-truncate">{{ item.label }}</span>
+        </a>
+      }
+    </div>
+  }
+</nav>
