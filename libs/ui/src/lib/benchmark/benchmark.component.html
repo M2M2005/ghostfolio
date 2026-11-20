@@ -23,7 +23,11 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="lh-normal px-1 text-nowrap" mat-cell>
-        <div class="text-truncate">
+        <div
+          class="text-truncate"
+          [class.name-limited]="showAnalystColumns()"
+          [title]="element?.name"
+        >
           {{ element?.name }}
         </div>
         @if (showSymbol()) {
@@ -161,6 +165,7 @@
           <gf-value
             class="d-inline-block justify-content-end"
             [locale]="locale()"
+            [precision]="2"
             [unit]="element?.currency"
             [value]="element?.marketPrice"
           />

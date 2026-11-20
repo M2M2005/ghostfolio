@@ -102,8 +102,6 @@ export class GfBenchmarkComponent implements OnInit {
         'potentialMedian',
         'consensus',
         'sparkline',
-        'change',
-        'marketCondition',
         'actions'
       ];
     }

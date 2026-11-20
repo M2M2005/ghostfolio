@@ -19,7 +19,7 @@
   --gf-down-1: rgba(207, 58, 58, 0.08);
   --gf-down-2: rgba(207, 58, 58, 0.16);
   --gf-down-3: rgba(207, 58, 58, 0.28);
-  --mat-table-background-color: transparent;
+  --mat-table-background-color: var(--gf-table-surface);
   --mat-table-row-item-outline-color: var(--gf-table-grid);
   --mat-table-header-headline-color: var(--gf-table-muted);
   --mat-table-header-headline-weight: 500;
@@ -28,14 +28,18 @@
   --mat-table-row-item-label-text-size: 15px;
   --mat-table-header-headline-size: 13px;
 
-  background: var(--gf-table-surface);
-  border: 1px solid var(--gf-table-line);
-  border-collapse: separate !important;
-  border-radius: 12px;
-  border-spacing: 0;
   font-size: 15px;
   font-variant-numeric: tabular-nums;
-  overflow: hidden;
+
+  // spécificité renforcée : le style de base de mat-table écrase sinon bordure et fond
+  &.mat-mdc-table {
+    background: var(--gf-table-surface);
+    border: 1px solid var(--gf-table-line);
+    border-collapse: separate;
+    border-radius: 12px;
+    border-spacing: 0;
+    overflow: hidden;
+  }
 
   th:first-child,
   td:first-child {
@@ -47,14 +51,14 @@
     padding-right: 14px !important;
   }
 
-  th {
+  th.mat-mdc-header-cell {
     background: var(--gf-table-head);
   }
 
   th {
     border-bottom: 1px solid var(--gf-table-line) !important;
     letter-spacing: 0.01em;
-    white-space: nowrap;
+    line-height: 1.25;
 
     .mat-sort-header-container {
       justify-content: inherit;

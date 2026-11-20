@@ -1,3 +1,8 @@
 :host {
   display: block;
 }
+
+// bourse-custom : nom tronqué (nom complet au survol) pour éviter le défilement horizontal
+.name-limited {
+  max-width: clamp(140px, 13vw, 260px);
+}
