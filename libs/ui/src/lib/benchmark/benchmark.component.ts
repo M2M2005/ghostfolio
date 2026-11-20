@@ -44,7 +44,9 @@ import { GfValueComponent } from '../value/value.component';
 import {
   change1m,
   consensusClass,
+  consensusDetail,
   consensusLabel,
+  consensusName,
   heatClass,
   potential,
   sparkPoints,
@@ -125,7 +127,9 @@ export class GfBenchmarkComponent implements OnInit {
 
   protected readonly change1m = change1m;
   protected readonly consensusClass = consensusClass;
+  protected readonly consensusDetail = consensusDetail;
   protected readonly consensusLabel = consensusLabel;
+  protected readonly consensusName = consensusName;
   protected readonly heatClass = heatClass;
   protected readonly isNumber = isNumber;
   protected readonly potential = potential;

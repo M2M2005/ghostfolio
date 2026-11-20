@@ -42,6 +42,24 @@ export function consensusClass(analyst: AnalystData | undefined): string {
   return key ? 'pill pill-hold' : '';
 }
 
+/** Libellé court du consensus (pastille) : Achat+, Achat, Neutre, Alléger, Vente. */
+export function consensusName(analyst: AnalystData | undefined): string {
+  const key = analyst?.recommendationKey;
+
+  return key ? (CONSENSUS[key] ?? key) : '';
+}
+
+/** Détail sous la pastille : note moyenne (1 = achat fort … 5 = vente) et part à l'achat. */
+export function consensusDetail(
+  analyst: AnalystData | undefined,
+  locale: string
+): string {
+  return consensusLabel(
+    analyst ? { ...analyst, recommendationKey: undefined } : undefined,
+    locale
+  );
+}
+
 export function consensusLabel(
   analyst: AnalystData | undefined,
   locale: string

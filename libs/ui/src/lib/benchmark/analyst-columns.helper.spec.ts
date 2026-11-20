@@ -2,7 +2,9 @@ import {
   change1m,
   trendClass,
   consensusClass,
+  consensusDetail,
   consensusLabel,
+  consensusName,
   heatClass,
   potential,
   sparkPoints
@@ -76,5 +78,20 @@ describe('heatClass', () => {
     expect(heatClass(-0.04, 0.03)).toBe('heat heat-down-2');
     expect(heatClass(-0.5, 0.1)).toBe('heat heat-down-3');
     expect(heatClass(undefined, 0.1)).toBe('');
+  });
+});
+
+describe('consensusName / consensusDetail', () => {
+  it('sépare le libellé de la note et de la part à l’achat', () => {
+    const analyst = {
+      buyPercent: 0.67,
+      recommendationKey: 'buy',
+      recommendationMean: 1.8
+    };
+
+    expect(consensusName(analyst)).toBe('Achat');
+    expect(consensusDetail(analyst, 'fr')).toBe('1,8 · 67 %');
+    expect(consensusName(undefined)).toBe('');
+    expect(consensusDetail(undefined, 'fr')).toBe('');
   });
 });

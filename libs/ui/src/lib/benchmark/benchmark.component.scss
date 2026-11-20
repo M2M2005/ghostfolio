@@ -2,7 +2,12 @@
   display: block;
 }
 
-// bourse-custom : nom tronqué (nom complet au survol) pour éviter le défilement horizontal
-.name-limited {
-  max-width: clamp(140px, 13vw, 260px);
+// bourse-custom : la colonne Nom prend l'espace restant et se tronque (nom complet au survol),
+// les autres colonnes gardent la largeur de leur contenu → jamais de défilement horizontal.
+.analyst-mode {
+  .mat-column-name {
+    max-width: 0;
+    min-width: 110px;
+    width: 100%;
+  }
 }
