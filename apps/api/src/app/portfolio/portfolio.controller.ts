@@ -51,6 +51,7 @@ import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { withCurrentPositionPerformance } from './current-position-performance.helper';
 import { GetDetailsDto } from './get-details.dto';
 import { GetDividendsDto } from './get-dividends.dto';
 import { GetHoldingsDto } from './get-holdings.dto';
@@ -407,7 +408,8 @@ export class PortfolioController {
       dateRange: range
     });
 
-    return { holdings };
+    // bourse-custom : performance de la position en cours
+    return { holdings: withCurrentPositionPerformance(holdings) };
   }
 
   @Get('investments')
