@@ -62,13 +62,27 @@ export function parseAnalystData(summary: {
     : undefined;
 }
 
+/** Même seuil que le bot (config/settings.yaml : min_analystes) */
+export const MIN_ANALYSTS = 5;
+
 /**
- * Avertir à l'ajout dans la liste de suivi : action (STOCK) sans aucun analyste, typiquement une
- * cotation secondaire (ex. 3HM.SG au lieu de MSCI). Les ETF, cryptos… n'ont jamais d'analystes.
+ * Avertissement à l'ajout dans la liste de suivi, pour une action (STOCK) seulement :
+ * 'none' = aucun analyste (cotation secondaire probable), 'few' = moins de 5 (ignorée par le bot).
+ * Les ETF, cryptos… n'ont jamais d'analystes : pas d'avertissement.
  */
-export function shouldWarnNoAnalysts(
+export function analystWarning(
   assetSubClass: string | undefined,
   analyst: AnalystData | undefined
-): boolean {
-  return assetSubClass === 'STOCK' && !analyst?.numberOfAnalysts;
+): 'few' | 'none' | null {
+  if (assetSubClass !== 'STOCK') {
+    return null;
+  }
+
+  const count = analyst?.numberOfAnalysts ?? 0;
+
+  if (count === 0) {
+    return 'none';
+  }
+
+  return count < MIN_ANALYSTS ? 'few' : null;
 }

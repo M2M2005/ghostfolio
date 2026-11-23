@@ -1,7 +1,7 @@
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { shouldWarnNoAnalysts } from '@ghostfolio/api/services/data-provider/yahoo-finance/analyst-data.helper';
+import { analystWarning } from '@ghostfolio/api/services/data-provider/yahoo-finance/analyst-data.helper';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -66,7 +66,7 @@ export class WatchlistService {
     symbol
   }: AssetProfileIdentifier): Promise<AnalystCheckResponse> {
     if (dataSource !== DataSource.YAHOO) {
-      return { warnNoAnalysts: false };
+      return { warning: null };
     }
 
     const [profile, analyst] = await Promise.all([
@@ -75,7 +75,8 @@ export class WatchlistService {
     ]);
 
     return {
-      warnNoAnalysts: shouldWarnNoAnalysts(profile?.assetSubClass, analyst)
+      numberOfAnalysts: analyst?.numberOfAnalysts,
+      warning: analystWarning(profile?.assetSubClass, analyst)
     };
   }
 

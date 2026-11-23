@@ -1,4 +1,4 @@
-import { parseAnalystData, shouldWarnNoAnalysts } from './analyst-data.helper';
+import { analystWarning, parseAnalystData } from './analyst-data.helper';
 
 describe('parseAnalystData', () => {
   it('extracts targets, consensus and the share of buy ratings', () => {
@@ -78,18 +78,23 @@ describe('parseAnalystData', () => {
   });
 });
 
-describe('shouldWarnNoAnalysts (bourse-custom)', () => {
-  it('avertit pour une action sans aucun analyste (cotation secondaire)', () => {
-    expect(shouldWarnNoAnalysts('STOCK', undefined)).toBe(true);
-    expect(shouldWarnNoAnalysts('STOCK', { numberOfAnalysts: undefined })).toBe(
-      true
+describe('analystWarning (bourse-custom)', () => {
+  it('aucun analyste : cotation secondaire probable', () => {
+    expect(analystWarning('STOCK', undefined)).toBe('none');
+    expect(analystWarning('STOCK', { numberOfAnalysts: undefined })).toBe(
+      'none'
     );
   });
 
-  it('se tait pour une action couverte, un ETF, une crypto ou un type inconnu', () => {
-    expect(shouldWarnNoAnalysts('STOCK', { numberOfAnalysts: 17 })).toBe(false);
-    expect(shouldWarnNoAnalysts('ETF', undefined)).toBe(false);
-    expect(shouldWarnNoAnalysts('CRYPTOCURRENCY', undefined)).toBe(false);
-    expect(shouldWarnNoAnalysts(undefined, undefined)).toBe(false);
+  it('moins de 5 analystes : ignorée par le bot', () => {
+    expect(analystWarning('STOCK', { numberOfAnalysts: 3 })).toBe('few');
+    expect(analystWarning('STOCK', { numberOfAnalysts: 4 })).toBe('few');
+  });
+
+  it('se tait à partir de 5 analystes, et pour les ETF, cryptos ou types inconnus', () => {
+    expect(analystWarning('STOCK', { numberOfAnalysts: 5 })).toBeNull();
+    expect(analystWarning('ETF', undefined)).toBeNull();
+    expect(analystWarning('CRYPTOCURRENCY', undefined)).toBeNull();
+    expect(analystWarning(undefined, undefined)).toBeNull();
   });
 });

@@ -104,11 +104,13 @@ export class GfWatchlistDialogHostComponent implements OnDestroy, OnInit {
         this.dataService
           .fetchWatchlistAnalystCheck({ dataSource, symbol })
           .pipe(
-            catchError(() => of({ warnNoAnalysts: false })),
+            catchError(() =>
+              of({ numberOfAnalysts: undefined, warning: null })
+            ),
             takeUntilDestroyed(this.destroyRef)
           )
-          .subscribe(({ warnNoAnalysts }) => {
-            if (!warnNoAnalysts) {
+          .subscribe(({ numberOfAnalysts, warning }) => {
+            if (!warning) {
               this.addItem(dataSource, symbol);
 
               return;
@@ -125,8 +127,14 @@ export class GfWatchlistDialogHostComponent implements OnDestroy, OnInit {
                 this.openDialog(user);
               },
               discardLabel: 'Choisir une autre cotation',
-              message: `Yahoo ne donne aucun objectif ni consensus d'analystes pour ${symbol} : c'est sans doute une cotation secondaire (autre place boursière). Choisis plutôt la cotation principale, sinon les colonnes d'analystes resteront vides et le bot ne pourra pas t'alerter sur cette action.`,
-              title: `${symbol} : aucune donnée d'analystes`
+              message:
+                warning === 'none'
+                  ? `Yahoo ne donne aucun objectif ni consensus d'analystes pour ${symbol} : c'est sans doute une cotation secondaire (autre place boursière). Choisis plutôt la cotation principale, sinon les colonnes d'analystes resteront vides et le bot ne pourra pas t'alerter sur cette action.`
+                  : `Seulement ${numberOfAnalysts === 1 ? '1 analyste suit' : `${numberOfAnalysts} analystes suivent`} ${symbol} : le bot ignore les actions suivies par moins de 5 analystes. C'est souvent une cotation secondaire (certificat américain, autre place boursière) : choisis plutôt la cotation principale.`,
+              title:
+                warning === 'none'
+                  ? `${symbol} : aucune donnée d'analystes`
+                  : `${symbol} : peu d'analystes`
             });
           });
       });

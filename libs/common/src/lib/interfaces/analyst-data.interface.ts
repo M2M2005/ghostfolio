@@ -15,6 +15,7 @@ export interface AnalystData {
 
 /** Vérification avant ajout à la liste de suivi (modification bourse-custom) */
 export interface AnalystCheckResponse {
-  /** Action sans aucun analyste sur Yahoo : sans doute une cotation secondaire */
-  warnNoAnalysts: boolean;
+  numberOfAnalysts?: number;
+  /** 'none' : aucun analyste (cotation secondaire ?) ; 'few' : moins de 5, ignorée par le bot */
+  warning: 'few' | 'none' | null;
 }
