@@ -10,7 +10,8 @@ ssh -o ConnectTimeout=10 "$VM" "cd ~/ghostfolio-src && git pull -q --ff-only && 
 echo "→ construction de $TAG lancée…"
 until ssh -o ConnectTimeout=10 "$VM" 'grep -q FIN- ~/ghostfolio-build.log' 2>/dev/null; do sleep 30; done
 ssh "$VM" "tail -1 ~/ghostfolio-build.log | grep -q FIN-0 || { tail -20 ~/ghostfolio-build.log; exit 1; }
-  cd ~/ghostfolio && sed -i -E 's#image: ghostfolio-bourse:[^ ]+#image: $TAG#' docker-compose.yml
+  # projet Docker Bourse : le tag de l'image est la variable GHOSTFOLIO_TAG du .env
+  cd ~/Bourse && sed -i -E 's#^GHOSTFOLIO_TAG=.*#GHOSTFOLIO_TAG=${TAG#ghostfolio-bourse:}#' .env
   docker compose up -d ghostfolio >/dev/null 2>&1
   for i in \$(seq 1 40); do s=\$(docker inspect -f '{{.State.Health.Status}}' \$(docker compose ps -q ghostfolio)); [ \"\$s\" = healthy ] && break; sleep 5; done
-  echo \"→ \$(grep 'image: ghostfolio-bourse' docker-compose.yml | xargs) : \$s\""
+  echo \"→ \$(grep '^GHOSTFOLIO_TAG=' .env) : \$s\""

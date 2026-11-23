@@ -19,7 +19,7 @@ echo "→ envoi sur la VM…"
 # capacité root : ni chown, ni suppression de fichiers d'un autre utilisateur).
 tar -C dist/apps/client -czf - . | ssh -o ConnectTimeout=10 "$VM" '
   set -e
-  cd ~/ghostfolio
+  cd ~/Bourse
   id=$(docker compose ps -q ghostfolio)
   docker exec -i -u node "$id" sh -c "rm -rf /ghostfolio/apps/client/* /ghostfolio/apps/client/.well-known && tar -C /ghostfolio/apps/client -xzf -"
   docker restart "$id" >/dev/null
