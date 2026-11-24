@@ -19,13 +19,10 @@
       </div>
     </div>
   } @else {
+    <!-- bourse-custom : nombre aligné à droite comme les autres valeurs -->
     <div class="d-flex py-1">
       <div class="d-flex flex-grow-1 indent-1 text-truncate">
-        {{ summary?.activityCount }}
-        <ng-container i18n>{summary?.activityCount, plural,
-          =1 {activity}
-          other {activities}
-        }</ng-container>
+        Opérations
         <span
           class="align-items-center d-none d-sm-flex ms-1"
           matTooltipPosition="above"
@@ -33,6 +30,13 @@
         >
           <ion-icon name="information-circle-outline" />
         </span>
+      </div>
+      <div class="justify-content-end">
+        <gf-value
+          class="justify-content-end"
+          [isLoading]="isLoading"
+          [value]="summary?.activityCount"
+        />
       </div>
     </div>
   }
