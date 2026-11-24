@@ -130,7 +130,7 @@ export class GfWatchlistDialogHostComponent implements OnDestroy, OnInit {
               message:
                 warning === 'none'
                   ? `Yahoo ne donne aucun objectif ni consensus d'analystes pour ${symbol} : c'est sans doute une cotation secondaire (autre place boursière). Choisis plutôt la cotation principale, sinon les colonnes d'analystes resteront vides et le bot ne pourra pas t'alerter sur cette action.`
-                  : `Seulement ${numberOfAnalysts === 1 ? '1 analyste suit' : `${numberOfAnalysts} analystes suivent`} ${symbol} : le bot ignore les actions suivies par moins de 5 analystes. C'est souvent une cotation secondaire (certificat américain, autre place boursière) : choisis plutôt la cotation principale.`,
+                  : `Seulement ${numberOfAnalysts === 1 ? '1 analyste suit' : `${numberOfAnalysts} analystes suivent`} ${symbol} : le bot ne déclenche pas d'alerte d'analystes en dessous de 5 (résultats et achats de dirigeants restent suivis). Vérifie que c'est bien la cotation principale : si c'est un certificat américain ou une autre place boursière, choisis plutôt l'originale ; sinon, le titre est simplement peu suivi.`,
               title:
                 warning === 'none'
                   ? `${symbol} : aucune donnée d'analystes`
